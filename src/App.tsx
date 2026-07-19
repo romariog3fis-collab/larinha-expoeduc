@@ -97,7 +97,7 @@ export default function App() {
       {/* Top Navigation Bar */}
       <nav className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-8 shrink-0">
         <div className="flex items-center gap-3">
-          <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain rounded-xl shadow-sm" onError={(e) => {
+          <img src="/larinha.png" alt="Logo" className="w-10 h-10 object-contain rounded-xl shadow-sm" onError={(e) => {
             // Fallback se a imagem não existir
             e.currentTarget.style.display = 'none';
             const nextSibling = e.currentTarget.nextElementSibling as HTMLElement;
@@ -133,8 +133,8 @@ export default function App() {
             {messages.map((msg) => (
               msg.role === 'model' ? (
                 <div key={msg.id} className="flex gap-4">
-                  <div className="shrink-0 w-12 h-12 bg-sky-100 rounded-2xl flex items-center justify-center border-2 border-sky-200 shadow-sm">
-                    <span className="text-2xl">🦜</span>
+                  <div className="shrink-0 w-12 h-12 bg-sky-100 rounded-2xl flex items-center justify-center border-2 border-sky-200 shadow-sm overflow-hidden p-1">
+                    <img src="/larinha.png" alt="Larinha" className="w-full h-full object-contain" />
                   </div>
                   <div className="space-y-4 max-w-[90%] sm:max-w-[85%]">
                     <div className="bg-sky-50 border border-sky-100 rounded-2xl rounded-tl-none p-4 sm:p-5 shadow-sm">
@@ -167,8 +167,8 @@ export default function App() {
             ))}
             {isLoading && (
               <div className="flex gap-4">
-                <div className="shrink-0 w-12 h-12 bg-sky-100 rounded-2xl flex items-center justify-center border-2 border-sky-200 shadow-sm">
-                  <span className="text-2xl">🦜</span>
+                <div className="shrink-0 w-12 h-12 bg-sky-100 rounded-2xl flex items-center justify-center border-2 border-sky-200 shadow-sm overflow-hidden p-1">
+                  <img src="/larinha.png" alt="Larinha" className="w-full h-full object-contain" />
                 </div>
                 <div className="space-y-4 max-w-[90%] sm:max-w-[85%]">
                   <div className="bg-sky-50 border border-sky-100 rounded-2xl rounded-tl-none p-5 shadow-sm flex items-center gap-2">
