@@ -5,6 +5,24 @@ import { ChatMessage } from './types';
 
 const WELCOME_MESSAGE = "Olá, educador(a)! Que alegria ter você por aqui! 🦜✨ Eu sou a **Larinha**, a mascote arara-azul-claro da **Teachy**, e serei a sua guia oficial na **ExpoEduc 2026**!\n\nComo defensora de uma rotina docente mais ágil e menos exaustiva, quero te fazer um convite: que tal descobrir como a **Teachy e nossas soluções de Inteligência Artificial** podem transformar a sua prática pedagógica? Nós ajudamos professores e gestores a reduzirem a sobrecarga de tarefas administrativas, criando planos de aula criativos, avaliações personalizadas e relatórios em segundos, permitindo que você foque no que realmente importa: o desenvolvimento integral dos seus estudantes! 🚀\n\nEstou pronta para te ajudar a voar alto neste congresso. Quer saber mais sobre a programação do Palco Max - AI4School, dicas de restaurantes com descontos em Natal ou como funciona o credenciamento antecipado? Me diga: qual é o seu principal desafio pedagógico hoje e como posso te ajudar?";
 
+const SCHEDULE_DATA: Record<string, any[]> = {
+  '23': [
+    { time: '13h50', title: 'Thaís e Roberta (SOS Educação)', desc: 'A dor e a delícia de ser um Educador', border: 'border-l-sky-500', text: 'text-sky-600' },
+    { time: '15h20', title: 'Sandro Bonás', desc: 'Como guiar nossos filhos na era da IA', border: 'border-l-emerald-500', text: 'text-emerald-600' },
+    { time: '17h00', title: 'Cláudia Costin', desc: 'O Futuro do Trabalho e a Educação', border: 'border-l-sky-500', text: 'text-sky-600' }
+  ],
+  '24': [
+    { time: '09h30', title: 'Edney Souza', desc: 'Inteligência Artificial na Educação', border: 'border-l-orange-500', text: 'text-orange-600' },
+    { time: '11h00', title: 'Painel AI4School', desc: 'Casos Reais em Escolas', border: 'border-l-sky-500', text: 'text-sky-600' },
+    { time: '14h30', title: 'Leo Fraiman', desc: 'Projeto de Vida', border: 'border-l-emerald-500', text: 'text-emerald-600' }
+  ],
+  '25': [
+    { time: '10h00', title: 'Inovação Inclusiva', desc: 'Transformação Digital nas Escolas', border: 'border-l-sky-500', text: 'text-sky-600' },
+    { time: '15h30', title: 'Rossandro Klinjey', desc: 'O Educador do Futuro', border: 'border-l-emerald-500', text: 'text-emerald-600' },
+    { time: '17h00', title: 'Encerramento', desc: 'Sorteios e Agradecimentos', border: 'border-l-orange-500', text: 'text-orange-600' }
+  ]
+};
+
 export default function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -15,6 +33,7 @@ export default function App() {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedDate, setSelectedDate] = useState('23');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -230,23 +249,34 @@ export default function App() {
 
           {/* Quick Schedule */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Palco Max - Destaques</h4>
-            <div className="space-y-3">
-              <div className="bg-white p-3 rounded-xl border-l-4 border-l-sky-500 border border-slate-200 shadow-sm">
-                <p className="text-[10px] font-bold text-sky-600 uppercase">Amanhã • 13h50</p>
-                <p className="text-xs font-bold">Thaís e Roberta (SOS Educação)</p>
-                <p className="text-[10px] text-slate-500">A dor e a delícia de ser um Educador</p>
-              </div>
-              <div className="bg-white p-3 rounded-xl border-l-4 border-l-emerald-500 border border-slate-200 shadow-sm">
-                <p className="text-[10px] font-bold text-emerald-600 uppercase">Amanhã • 15h20</p>
-                <p className="text-xs font-bold">Sandro Bonás</p>
-                <p className="text-[10px] text-slate-500">Como guiar nossos filhos na era da IA</p>
-              </div>
-              <div className="bg-white p-3 rounded-xl border-l-4 border-l-sky-500 border border-slate-200 shadow-sm">
-                <p className="text-[10px] font-bold text-sky-600 uppercase">Amanhã • 17h00</p>
-                <p className="text-xs font-bold">Cláudia Costin</p>
-                <p className="text-[10px] text-slate-500">O Futuro do Trabalho e a Educação</p>
-              </div>
+            <div className="flex items-center justify-between">
+              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Palco Max - Destaques</h4>
+            </div>
+            
+            <div className="flex bg-slate-200/50 p-1 rounded-xl">
+              {['23', '24', '25'].map((day) => (
+                <button
+                  key={day}
+                  onClick={() => setSelectedDate(day)}
+                  className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors ${
+                    selectedDate === day 
+                      ? 'bg-white text-sky-600 shadow-sm' 
+                      : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+                  }`}
+                >
+                  {day} Jul
+                </button>
+              ))}
+            </div>
+
+            <div className="space-y-3 pt-2">
+              {SCHEDULE_DATA[selectedDate].map((event, idx) => (
+                <div key={idx} className={`bg-white p-3 rounded-xl border-l-4 ${event.border} border border-slate-200 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5`}>
+                  <p className={`text-[10px] font-bold ${event.text} uppercase`}>{selectedDate} Jul • {event.time}</p>
+                  <p className="text-xs font-bold mt-0.5">{event.title}</p>
+                  <p className="text-[10px] text-slate-500 mt-1">{event.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
 

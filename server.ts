@@ -38,7 +38,7 @@ async function startServer() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: 'google/gemini-2.5-flash-free', // Using a faster specific free model
+          model: 'openrouter/free', // Using a free model on OpenRouter
           messages: [
             { role: 'system', content: SYSTEM_PROMPT },
             ...openRouterHistory,
