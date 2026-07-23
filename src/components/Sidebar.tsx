@@ -3,19 +3,21 @@ import { ScheduleEvent } from '../types';
 
 export const SCHEDULE_DATA: Record<string, ScheduleEvent[]> = {
   '23': [
-    { time: '13h50', title: 'Thaís e Roberta (SOS Educação)', desc: 'A dor e a delícia de ser um Educador', border: 'border-l-sky-500', text: 'text-sky-600' },
-    { time: '15h20', title: 'Sandro Bonás', desc: 'Como guiar nossos filhos na era da IA', border: 'border-l-emerald-500', text: 'text-emerald-600' },
-    { time: '17h00', title: 'Cláudia Costin', desc: 'O Futuro do Trabalho e a Educação', border: 'border-l-sky-500', text: 'text-sky-600' }
+    { time: '15h40', title: 'Yves Justino', desc: 'Não deixe a graça passar', border: 'border-l-sky-500', text: 'text-sky-600' },
+    { time: '16h30', title: 'Rodolfo Costa', desc: 'Lições de um Chapeleiro Maluco', border: 'border-l-emerald-500', text: 'text-emerald-600' },
+    { time: '18h15', title: 'Maestro João Carlos Martins', desc: 'Uma história de Propósito e Legado', border: 'border-l-amber-500', text: 'text-amber-600' }
   ],
   '24': [
-    { time: '09h30', title: 'Edney Souza', desc: 'Inteligência Artificial na Educação', border: 'border-l-orange-500', text: 'text-orange-600' },
-    { time: '11h00', title: 'Painel AI4School', desc: 'Casos Reais em Escolas', border: 'border-l-sky-500', text: 'text-sky-600' },
-    { time: '14h30', title: 'Leo Fraiman', desc: 'Projeto de Vida', border: 'border-l-emerald-500', text: 'text-emerald-600' }
+    { time: '13h50', title: 'Thaís e Roberta (SOS Educação)', desc: 'A dor e a delícia de ser um Educador em 2026', border: 'border-l-sky-500', text: 'text-sky-600' },
+    { time: '15h20', title: 'Sandro Bonás', desc: 'Como guiar nossos filhos na era da IA', border: 'border-l-emerald-500', text: 'text-emerald-600' },
+    { time: '17h00', title: 'Cláudia Costin', desc: 'O Futuro do Trabalho e a Educação', border: 'border-l-purple-500', text: 'text-purple-600' },
+    { time: '18h00', title: 'Mayana Neiva', desc: 'A felicidade não está lá fora', border: 'border-l-orange-500', text: 'text-orange-600' }
   ],
   '25': [
-    { time: '10h00', title: 'Inovação Inclusiva', desc: 'Transformação Digital nas Escolas', border: 'border-l-sky-500', text: 'text-sky-600' },
-    { time: '15h30', title: 'Rossandro Klinjey', desc: 'O Educador do Futuro', border: 'border-l-emerald-500', text: 'text-emerald-600' },
-    { time: '17h00', title: 'Encerramento', desc: 'Sorteios e Agradecimentos', border: 'border-l-orange-500', text: 'text-orange-600' }
+    { time: '13h50', title: 'Selma de Niêta', desc: 'Risoterapia Pedagógica', border: 'border-l-sky-500', text: 'text-sky-600' },
+    { time: '15h20', title: 'Bia Bedran', desc: 'Interfaces da Arte Narrativa', border: 'border-l-emerald-500', text: 'text-emerald-600' },
+    { time: '16h40', title: 'Fátima Bernardes (Arena SAS)', desc: 'Nada é Para Sempre', border: 'border-l-rose-500', text: 'text-rose-600' },
+    { time: '18h15', title: 'Marcos Piangers', desc: 'Escola do Futuro: Insights para ensinar', border: 'border-l-orange-500', text: 'text-orange-600' }
   ]
 };
 
