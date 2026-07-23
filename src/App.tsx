@@ -151,7 +151,7 @@ export default function App() {
       {/* Main Content Area */}
       <div className="flex-1 flex overflow-hidden">
         {/* Chat Area */}
-        <main className="w-full lg:w-2/3 flex flex-col bg-white">
+        <main className="flex-1 flex flex-col bg-white min-w-0">
           <ChatWindow
             messages={messages}
             isLoading={isLoading}
@@ -168,7 +168,7 @@ export default function App() {
         </main>
 
         {/* Sidebar (Desktop) */}
-        <div className="hidden lg:flex w-1/3">
+        <div className="hidden lg:flex w-80 xl:w-96 shrink-0">
           <Sidebar
             selectedDate={selectedDate}
             setSelectedDate={setSelectedDate}

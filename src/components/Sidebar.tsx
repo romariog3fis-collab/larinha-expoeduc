@@ -31,7 +31,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onAskAboutEvent
 }) => {
   return (
-    <aside className="w-full lg:w-1/3 bg-slate-50 flex flex-col p-5 gap-5 overflow-y-auto border-l border-slate-200">
+    <aside className="w-full h-full bg-slate-50 flex flex-col p-5 gap-5 overflow-y-auto border-l border-slate-200">
       {/* Event Main Card */}
       <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-3">
         <div className="flex items-center gap-2 text-sky-600">
