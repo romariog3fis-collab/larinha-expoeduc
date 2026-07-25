@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getRegistrations } from '../_db';
+import { getRegistrations } from '../_db.ts';
 
 const ADMIN_SECRET = 'Teachy@ExpoEduc26';
 

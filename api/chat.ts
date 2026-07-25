@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { SYSTEM_PROMPT } from '../server-prompt';
+import { SYSTEM_PROMPT } from '../server-prompt.ts';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
