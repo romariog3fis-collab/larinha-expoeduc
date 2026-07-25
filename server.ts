@@ -136,19 +136,15 @@ async function startServer() {
           }
         );
 
-        if (!geminiRes.ok) {
-          const errText = await geminiRes.text();
-          console.error('Gemini REST API error:', errText);
-          if (geminiRes.status === 429) {
-            return res.status(429).json({ error: 'Quota exceeded' });
+        if (geminiRes.ok) {
+          const data = await geminiRes.json();
+          const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text) {
+            return res.json({ text });
           }
-          return res.status(500).json({ error: 'Erro ao comunicar com a API do Gemini.' });
-        }
-
-        const data = await geminiRes.json();
-        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (text) {
-          return res.json({ text });
+        } else {
+          const errText = await geminiRes.text();
+          console.error('Gemini REST API error (falling through to OpenRouter):', errText);
         }
       }
 
@@ -168,7 +164,7 @@ async function startServer() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            model: 'google/gemini-2.0-flash-lite-001',
+            model: 'google/gemini-2.5-flash-lite',
             messages: [
               { role: 'system', content: systemPrompt },
               ...openRouterHistory,
