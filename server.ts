@@ -109,9 +109,8 @@ async function startServer() {
         systemPrompt = SYSTEM_PROMPT + personalizationNote;
       }
 
-      // Prioritize Gemini API if available
+      // Prioritize Gemini API if available via direct REST fetch
       if (geminiKey) {
-        const ai = new GoogleGenAI({ apiKey: geminiKey });
         const contents = [
           ...history.map((msg: any) => ({
             role: msg.role === 'user' ? 'user' : 'model',
@@ -120,16 +119,37 @@ async function startServer() {
           { role: 'user', parts: [{ text: message }] }
         ];
 
-        const response = await ai.models.generateContent({
-          model: 'gemini-2.0-flash',
-          contents,
-          config: {
-            systemInstruction: systemPrompt,
-            temperature: 0.7,
-          },
-        });
+        const geminiRes = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              system_instruction: {
+                parts: [{ text: systemPrompt }]
+              },
+              contents,
+              generationConfig: {
+                temperature: 0.7
+              }
+            })
+          }
+        );
 
-        return res.json({ text: response.text });
+        if (!geminiRes.ok) {
+          const errText = await geminiRes.text();
+          console.error('Gemini REST API error:', errText);
+          if (geminiRes.status === 429) {
+            return res.status(429).json({ error: 'Quota exceeded' });
+          }
+          return res.status(500).json({ error: 'Erro ao comunicar com a API do Gemini.' });
+        }
+
+        const data = await geminiRes.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) {
+          return res.json({ text });
+        }
       }
 
       // Fallback to OpenRouter API

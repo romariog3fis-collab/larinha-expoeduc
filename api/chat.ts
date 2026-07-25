@@ -1,5 +1,4 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { GoogleGenAI } from '@google/genai';
 import { SYSTEM_PROMPT } from '../server-prompt';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -12,7 +11,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (!openRouterKey && !geminiKey) {
     return res.status(500).json({
-      error: 'Chave de API não configurada. Defina OPENROUTER_API_KEY ou GEMINI_API_KEY nas variáveis de ambiente da Vercel.'
+      error: 'Chave de API não configurada. Defina GEMINI_API_KEY ou OPENROUTER_API_KEY nas variáveis de ambiente da Vercel.'
     });
   }
 
@@ -29,9 +28,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       systemPrompt = SYSTEM_PROMPT + personalizationNote;
     }
 
-    // Prioritize Gemini API directly if available
+    // 1. Prioritize Gemini API directly via fetch
     if (geminiKey) {
-      const ai = new GoogleGenAI({ apiKey: geminiKey });
       const contents = [
         ...(Array.isArray(history) ? history.map((msg: any) => ({
           role: msg.role === 'user' ? 'user' : 'model',
@@ -40,19 +38,40 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         { role: 'user', parts: [{ text: message }] }
       ];
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.0-flash',
-        contents,
-        config: {
-          systemInstruction: systemPrompt,
-          temperature: 0.7,
-        },
-      });
+      const geminiRes = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system_instruction: {
+              parts: [{ text: systemPrompt }]
+            },
+            contents,
+            generationConfig: {
+              temperature: 0.7
+            }
+          })
+        }
+      );
 
-      return res.json({ text: response.text });
+      if (!geminiRes.ok) {
+        const errText = await geminiRes.text();
+        console.error('Gemini REST API error:', errText);
+        if (geminiRes.status === 429) {
+          return res.status(429).json({ error: 'Quota exceeded' });
+        }
+        return res.status(500).json({ error: 'Erro ao comunicar com a API do Gemini.' });
+      }
+
+      const data = await geminiRes.json();
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text) {
+        return res.json({ text });
+      }
     }
 
-    // Fallback to OpenRouter API
+    // 2. Fallback to OpenRouter API via fetch
     if (openRouterKey) {
       const openRouterHistory = Array.isArray(history)
         ? history.map((msg: any) => ({
@@ -61,7 +80,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           }))
         : [];
 
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      const openRouterRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${openRouterKey}`,
@@ -80,19 +99,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         })
       });
 
-      if (!response.ok) {
-        const errorData = await response.text();
+      if (!openRouterRes.ok) {
+        const errorData = await openRouterRes.text();
         console.error('OpenRouter API error:', errorData);
-        if (response.status === 429) {
+        if (openRouterRes.status === 429) {
           return res.status(429).json({ error: 'Quota exceeded' });
         }
         return res.status(500).json({ error: 'Falha ao processar mensagem no OpenRouter.' });
       }
 
-      const data = await response.json();
+      const data = await openRouterRes.json();
       const reply = data.choices?.[0]?.message?.content || 'Não consegui obter uma resposta.';
       return res.json({ text: reply });
     }
+
+    return res.status(500).json({ error: 'Nenhum provedor de IA respondeu com sucesso.' });
   } catch (error: any) {
     console.error('Error calling AI API:', error);
     if (error?.status === 429 || error?.message?.includes('429')) {
